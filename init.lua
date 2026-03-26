@@ -27,8 +27,10 @@ local example_cfg = {
 function Run_Command(key, cfg)
     if cfg.commands[key] ~= nil then
         print("found command")
+        Toggle_Command_Line()
         cfg.commands[key]()
     else
+        Toggle_Command_Line()
         cfg.arbitrary_command(key)
     end
 end
