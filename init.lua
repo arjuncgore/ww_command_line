@@ -6,6 +6,7 @@ Command_Mode = false
 local command_cur = ""
 local command_text = nil
 local command_overlay = nil
+local command_last = nil
 
 local example_cfg = {
     start_key = "F8",
@@ -25,7 +26,14 @@ local example_cfg = {
 }
 
 function Run_Command(key, cfg)
-    if cfg.commands[key] ~= nil then
+    if key == nil then
+        print("no command ran")
+    end
+    if key == "" then
+        print("running last command")
+        Toggle_Command_Line()
+        Run_Command(command_last)
+    elseif cfg.commands[key] ~= nil then
         print("found command")
         Toggle_Command_Line()
         cfg.commands[key]()
@@ -54,7 +62,7 @@ function Update_Command(key, cfg)
         end
     elseif key == "Return" then
         -- ACTIONS
-        print("Typed Command: " .. command_cur)
+        command_last = command_cur
         Run_Command(command_cur, cfg)
         Clear_Command()
     end
