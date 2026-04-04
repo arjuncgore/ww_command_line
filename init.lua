@@ -6,6 +6,7 @@ Command_Mode = false
 local command_cur = ""
 local command_text = nil
 local command_overlay = nil
+local command_last = nil
 
 local example_cfg = {
     start_key = "F8",
@@ -25,18 +26,38 @@ local example_cfg = {
 }
 
 function Run_Command(key, cfg)
-    if cfg.commands[key] ~= nil then
+    print("running command: " .. key)
+    if key == nil then
+        print("no command ran")
+    end
+    if key == "" then
+        print("running last command")
+        print(command_last)
+        Command_Mode = false
+        Run_Command(command_last, cfg)
+    elseif cfg.commands[key] ~= nil then
         print("found command")
-        Toggle_Command_Line()
+        Command_Mode = false
         cfg.commands[key]()
+        command_last = key
+        print("set last command to :::" .. command_last)
     else
-        Toggle_Command_Line()
+        Command_Mode = false
         cfg.arbitrary_command(key)
+        command_last = key
     end
 end
 
 function Clear_Command()
     command_cur = ""
+    if command_overlay then
+        command_overlay:close()
+        command_overlay = nil
+    end
+    if command_text then
+        command_text:close()
+        command_text = nil
+    end
 end
 
 function Update_Command(key, cfg)
@@ -54,10 +75,10 @@ function Update_Command(key, cfg)
         end
     elseif key == "Return" then
         -- ACTIONS
-        print("Typed Command: " .. command_cur)
         Run_Command(command_cur, cfg)
         Clear_Command()
     end
+    print(command_cur)
     command_text = waywall.text(command_cur, {
         x = cfg.look.x,
         y = cfg.look.y + (cfg.look.size + 2) * 10,
