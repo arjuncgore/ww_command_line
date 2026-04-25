@@ -7,7 +7,7 @@ local letters = {
     "q", "r", "s", "t", "u", "v", "w", "x",
     "y", "z",
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-    "Return", "Backspace", "Space",
+    "Backspace", "Space",
 }
 
 
@@ -24,7 +24,7 @@ function M.list_contains(words, word)
     return false
 end
 
-function M.typing_actions(config, fn)
+function M.typing_actions(config, fn, enter_key)
     local saved = {}
     for key, func in pairs(config.actions) do
         local normalized_key = M.normalize_key(key)
@@ -54,6 +54,16 @@ function M.typing_actions(config, fn)
                     return false
                 end
                 -- return Command_Mode and fn(letter) or false
+            end
+        end
+    end
+
+    if enter_key then
+        config.actions[enter_key] = function()
+            if Command_Mode then
+                return fn("Return")
+            else
+                return false
             end
         end
     end
