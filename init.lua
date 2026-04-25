@@ -10,6 +10,7 @@ local command_last = nil
 
 local example_cfg = {
     start_key = "F8",
+    enter_key = "Return",
     look = {
         x = 200,
         y = 200,
@@ -122,7 +123,7 @@ M.setup = function(config, cfg)
     end
 
     Command_Mode = false
-    h.typing_actions(config, function(key) Update_Command(key, cfg) end)
+    h.typing_actions(config, function(key) Update_Command(key, cfg) end, cfg.enter_key)
 
     config.actions[cfg.start_key] = function() Toggle_Command_Line(config, cfg) end
 end
