@@ -24,6 +24,7 @@ local example_cfg = {
     arbitrary_command = function(key)
         print(key)
     end,
+    repeat_last_arbitrary = false,
 }
 
 function Run_Command(key, cfg)
@@ -45,7 +46,9 @@ function Run_Command(key, cfg)
     else
         Command_Mode = false
         cfg.arbitrary_command(key)
-        command_last = key
+        if cfg.repeat_last_arbitrary then
+            command_last = key
+        end
     end
 end
 
