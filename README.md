@@ -7,7 +7,7 @@ Run commands through waywall config via text inputs rather than keyboard shortcu
 ```lua
 return {
     url = "https://github.com/arjuncgore/ww_command_line",
-    config = function(config),
+    config = function(config)
         require("command_line").setup(config, {
             start_key = "BACKSLASH",
             enter_key = "Return",
