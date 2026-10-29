@@ -71,6 +71,11 @@ function Update_Command(key, cfg)
             command_cur = command_cur:sub(1, math.max(#command_cur - 1, 0))
         elseif key == "Space" then
             command_cur = command_cur .. " "
+        elseif key == "Tab" then
+            local completed_command = h.complete_function(command_cur, cfg.commands)
+            if completed_command then
+                command_cur = completed_command
+            end
         else
             command_cur = command_cur .. key
         end
