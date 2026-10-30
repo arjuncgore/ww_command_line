@@ -11,6 +11,10 @@ local command_last = nil
 local example_cfg = {
     start_key = "F8",
     enter_key = "Return",
+    additional_inputs = {
+        ["minus"] = "-",
+        ["period"] = ".",
+    },
     look = {
         x = 200,
         y = 200,
@@ -66,7 +70,11 @@ function Update_Command(key, cfg)
         command_text:close()
         command_text = nil
     end
-    if key ~= "Return" then
+    if key == "Return" then
+        -- ACTIONS
+        Run_Command(command_cur, cfg)
+        Clear_Command()
+    else
         if key == "Backspace" then
             command_cur = command_cur:sub(1, math.max(#command_cur - 1, 0))
         elseif key == "Space" then
@@ -74,10 +82,6 @@ function Update_Command(key, cfg)
         else
             command_cur = command_cur .. key
         end
-    elseif key == "Return" then
-        -- ACTIONS
-        Run_Command(command_cur, cfg)
-        Clear_Command()
     end
     print(command_cur)
     command_text = waywall.text(command_cur, {
