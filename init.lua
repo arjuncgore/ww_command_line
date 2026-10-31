@@ -7,6 +7,7 @@ local command_cur = ""
 local command_text = nil
 local command_overlay = nil
 local command_last = nil
+local autocorrect_text = nil
 
 local example_cfg = {
     start_key = "F8",
@@ -15,7 +16,8 @@ local example_cfg = {
         x = 200,
         y = 200,
         size = 7,
-        color = "#FFFFFF"
+        color = "#FFFFFF",
+        completion_color = "#CCCCCC"
     },
     commands = {
         ["test1"] = function() print("testing: test1") end,
@@ -76,6 +78,10 @@ function Clear_Command()
         command_text:close()
         command_text = nil
     end
+    if autocorrect_text then
+        autocorrect_text:close()
+        autocorrect_text = nil
+    end
 end
 
 function Update_Command(key, cfg)
@@ -83,11 +89,20 @@ function Update_Command(key, cfg)
         command_text:close()
         command_text = nil
     end
+    if autocorrect_text then
+        autocorrect_text:close()
+        autocorrect_text = nil
+    end
     if key ~= "Return" then
         if key == "Backspace" then
             command_cur = command_cur:sub(1, math.max(#command_cur - 1, 0))
         elseif key == "Space" then
             command_cur = command_cur .. " "
+        elseif key == "Tab" then
+            local completed_command = h.complete_function(command_cur, cfg.commands)
+            if completed_command then
+                command_cur = completed_command
+            end
         else
             command_cur = command_cur .. key
         end
@@ -104,6 +119,20 @@ function Update_Command(key, cfg)
         color = cfg.look.color
     })
 
+    local autocorrect_cur = h.complete_function(command_cur, cfg.commands)
+    if cfg.look.completion_color and autocorrect_cur then
+        local extra = ""
+        for _ = 1, #command_cur do
+            extra = extra .. " "
+        end
+        extra = extra .. autocorrect_cur:sub(#command_cur + 1, -1)
+        autocorrect_text = waywall.text(extra, {
+            x = cfg.look.x,
+            y = cfg.look.y + (cfg.look.size + 2) * 10,
+            size = cfg.look.size,
+            color = cfg.look.completion_color
+        })
+    end
 
     -- return true
 end
@@ -116,6 +145,10 @@ function Toggle_Command_Line(config, cfg)
     if command_text then
         command_text:close()
         command_text = nil
+    end
+    if autocorrect_text then
+        autocorrect_text:close()
+        autocorrect_text = nil
     end
     -- SWITCH MODE FROM NORMAL TO GOREDLE AND BACK
     if not Command_Mode then

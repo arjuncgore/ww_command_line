@@ -7,9 +7,28 @@ local letters = {
     "q", "r", "s", "t", "u", "v", "w", "x",
     "y", "z",
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-    "Backspace", "Space",
+    "Backspace", "Space", "Tab",
 }
 
+function M.complete_function(prefix, commands)
+    if prefix == "" or prefix:sub(1, 1) == " " then
+        return nil
+    end
+    local len = #prefix
+
+    local keys = {}
+    for key, _ in pairs(commands) do
+        table.insert(keys, key)
+    end
+    table.sort(keys)
+
+    for _, key in ipairs(keys) do
+        if key:sub(1, len) == prefix then
+            return key
+        end
+    end
+    return nil
+end
 
 function M.normalize_key(key)
     key = key:gsub("^%*%-", "")
