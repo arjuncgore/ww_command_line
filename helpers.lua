@@ -23,7 +23,7 @@ function M.complete_function(prefix, commands)
     table.sort(keys)
 
     for _, key in ipairs(keys) do
-        if keys:sub(1, len) == prefix then
+        if key:sub(1, len) == prefix then
             return key
         end
     end
