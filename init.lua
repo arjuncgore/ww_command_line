@@ -39,13 +39,27 @@ function Run_Command(key, cfg)
     elseif cfg.commands[key] ~= nil then
         print("found command")
         Command_Mode = false
-        cfg.commands[key]()
+        cfg.commands[key]({})
         command_last = key
         print("set last command to :::" .. command_last)
     else
-        Command_Mode = false
-        cfg.arbitrary_command(key)
-        command_last = key
+        -- cmd {args} case
+        local args = {}
+        for word in key:gmatch("%S+") do
+            args[#args + 1] = word
+        end
+        local cmd = table.remove(args, 1)
+        if cfg.commands[cmd] ~= nil then
+            print("found command")
+            Command_Mode = false
+            cfg.commands[cmd](args)
+            command_last = key
+            print("set last command to :::" .. command_last)
+        else
+            Command_Mode = false
+            cfg.arbitrary_command(key)
+            command_last = key
+        end
     end
 end
 
