@@ -11,7 +11,7 @@ local command_last = nil
 local example_cfg = {
     start_key = "F8",
     enter_key = "Return",
-    additional_inputs = {
+    add_inputs = {
         ["minus"] = "-",
         ["period"] = ".",
     },
@@ -127,7 +127,7 @@ M.setup = function(config, cfg)
     end
 
     Command_Mode = false
-    h.typing_actions(config, function(key) Update_Command(key, cfg) end, cfg.enter_key)
+    h.typing_actions(config, function(key) Update_Command(key, cfg) end, cfg.enter_key, cfg.add_inputs)
 
     config.actions[cfg.start_key] = function() Toggle_Command_Line(config, cfg) end
 end

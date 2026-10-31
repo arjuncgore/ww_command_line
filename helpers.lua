@@ -24,7 +24,11 @@ function M.list_contains(words, word)
     return false
 end
 
-function M.typing_actions(config, fn, enter_key)
+function M.typing_actions(config, fn, enter_key, add_inputs)
+    local norm_add_inputs = {}
+    for k, v in pairs(add_inputs or {}) do
+        norm_add_inputs[M.normalize_key(k)] = v
+    end
     local saved = {}
     for key, func in pairs(config.actions) do
         local normalized_key = M.normalize_key(key)
@@ -35,7 +39,15 @@ function M.typing_actions(config, fn, enter_key)
                 else
                     return func()
                 end
-                -- return Command_Mode and fn(normalized_key) or func()
+            end
+            saved[normalized_key] = true
+        elseif norm_add_inputs[normalized_key] then
+            config.actions[key] = function()
+                if Command_Mode then
+                    return fn(norm_add_inputs[normalized_key])
+                else
+                    return func()
+                end
             end
             saved[normalized_key] = true
         else
@@ -53,7 +65,17 @@ function M.typing_actions(config, fn, enter_key)
                 else
                     return false
                 end
-                -- return Command_Mode and fn(letter) or false
+            end
+        end
+    end
+    for key, letter in pairs(norm_add_inputs) do
+        if not saved[key] then
+            config.actions["*-" .. key] = function()
+                if Command_Mode then
+                    return fn(letter)
+                else
+                    return false
+                end
             end
         end
     end
