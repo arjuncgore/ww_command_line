@@ -12,6 +12,10 @@ local autocorrect_text = nil
 local example_cfg = {
     start_key = "F8",
     enter_key = "Return",
+    add_inputs = {
+        ["minus"] = "-",
+        ["period"] = ".",
+    },
     look = {
         x = 200,
         y = 200,
@@ -93,23 +97,23 @@ function Update_Command(key, cfg)
         autocorrect_text:close()
         autocorrect_text = nil
     end
-    if key ~= "Return" then
-        if key == "Backspace" then
-            command_cur = command_cur:sub(1, math.max(#command_cur - 1, 0))
-        elseif key == "Space" then
-            command_cur = command_cur .. " "
-        elseif key == "Tab" then
-            local completed_command = h.complete_function(command_cur, cfg.commands)
-            if completed_command then
-                command_cur = completed_command
-            end
-        else
-            command_cur = command_cur .. key
-        end
-    elseif key == "Return" then
+    if key == "Return" then
         -- ACTIONS
         Run_Command(command_cur, cfg)
         Clear_Command()
+        return
+    end
+    if key == "Backspace" then
+        command_cur = command_cur:sub(1, math.max(#command_cur - 1, 0))
+    elseif key == "Space" then
+        command_cur = command_cur .. " "
+    elseif key == "Tab" then
+        local completed_command = h.complete_function(command_cur, cfg.commands)
+        if completed_command then
+            command_cur = completed_command
+        end
+    else
+        command_cur = command_cur .. key
     end
     print(command_cur)
     command_text = waywall.text(command_cur, {
@@ -173,7 +177,7 @@ M.setup = function(config, cfg)
     end
 
     Command_Mode = false
-    h.typing_actions(config, function(key) Update_Command(key, cfg) end, cfg.enter_key)
+    h.typing_actions(config, function(key) Update_Command(key, cfg) end, cfg.enter_key, cfg.add_inputs)
 
     config.actions[cfg.start_key] = function() Toggle_Command_Line(config, cfg) end
 end
