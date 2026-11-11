@@ -7,7 +7,7 @@ local letters = {
     "q", "r", "s", "t", "u", "v", "w", "x",
     "y", "z",
     "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-    "Backspace", "Space", "Tab",
+    "backspace", "space", "tab",
 }
 
 function M.complete_function(prefix, commands)
@@ -102,7 +102,7 @@ function M.typing_actions(config, fn, enter_key, add_inputs)
     if enter_key then
         config.actions[enter_key] = function()
             if Command_Mode then
-                return fn("Return")
+                return fn("return")
             else
                 return false
             end

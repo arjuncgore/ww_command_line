@@ -11,7 +11,7 @@ local autocorrect_text = nil
 
 local example_cfg = {
     start_key = "F8",
-    enter_key = "Return",
+    enter_key = "return",
     add_inputs = {
         ["minus"] = "-",
         ["period"] = ".",
@@ -97,17 +97,17 @@ function Update_Command(key, cfg)
         autocorrect_text:close()
         autocorrect_text = nil
     end
-    if key == "Return" then
+    if key == "return" then
         -- ACTIONS
         Run_Command(command_cur, cfg)
         Clear_Command()
         return
     end
-    if key == "Backspace" then
+    if key == "backspace" then
         command_cur = command_cur:sub(1, math.max(#command_cur - 1, 0))
-    elseif key == "Space" then
+    elseif key == "space" then
         command_cur = command_cur .. " "
-    elseif key == "Tab" then
+    elseif key == "tab" then
         local completed_command = h.complete_function(command_cur, cfg.commands)
         if completed_command then
             command_cur = completed_command
