@@ -8,7 +8,7 @@ Run commands through waywall config via text inputs rather than keyboard shortcu
 return {
     url = "https://github.com/arjuncgore/ww_command_line",
     config = function(config)
-        require("command_line").setup(config, {
+        require("ww_command_line").setup(config, {
             start_key = "BACKSLASH",
             enter_key = "Return",
             look = {
@@ -25,7 +25,7 @@ return {
             end,
     })
     end,
-    name = "command_line",
+    name = "ww_command_line",
     update_on_load = true,
 }
 ```
@@ -33,12 +33,12 @@ return {
 ### Otherwise
 #### Clone plugin to waywall config folder
 ```bash
-git clone https://github.com/arjuncgore/ww_command_line ~/.config/waywall/command_line
+git clone https://github.com/arjuncgore/ww_command_line ~/.config/waywall/ww_command_line
 ```
 #### Setup config in `init.lua`
 ```lua
 -- rest of config
-require("command_line").setup(config, {
+require("ww_command_line").setup(config, {
             start_key = "BACKSLASH",
             enter_key = "Return",
             look = {
