@@ -15,10 +15,11 @@ return {
                 x = 200,
                 y = 200,
                 size = 7,
-                color = "#FFFFFF"
+                color = "#FFFFFF",
+                 completion_color = "#CCCCCC"
             },
             commands = {
-                -- [<string>] = <function>
+                -- [<string>] = <function> (args table)
             },
             arbitrary_command = function(key)
                 -- <function>
@@ -45,10 +46,11 @@ require("ww_command_line").setup(config, {
                 x = 200,
                 y = 200,
                 size = 7,
-                color = "#FFFFFF"
+                color = "#FFFFFF",
+                completion_color = "#CCCCCC"
             },
             commands = {
-                -- [<string>] = <function>
+                -- [<string>] = <function> (args table)
             },
             arbitrary_command = function(key)
                 -- <function>
